@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<script src="//://gstatic.com"></script>
+    <style>
+        body {
+            margin: 0;
+            background: blue;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+        /* Fond bleu pour test */
+        #bg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <cast-media-player style="display:none"></cast-media-player>
+    <img id="bg" src="">
+    <script>
+        const context = cast.framework.CastReceiverContext.getInstance();
+        const NAMESPACE = 'urn:x-cast:com.pedrocast.cast';
+
+context.addCustomMessageListener(NAMESPACE, (event) => {
+    const data = event.data;
+    // TEST VISUEL : Si le message arrive, le fond DOIT changer
+    document.body.style.backgroundColor = "green"; 
+
+    const img = document.getElementById('bg');
+    if (data.url) {
+        console.log("Nouvelle URL reçue : " + data.url);
+        img.src = data.url;
+        img.style.display = "block"; // Assurez-vous qu'elle n'est pas cachée
+    }
+});
+
+        const options = new cast.framework.CastReceiverOptions();
+        options.customNamespaces = { [NAMESPACE]: cast.framework.system.MessageType.JSON };
+        context.start(options);
+    </script>
+</body>
+</html>
